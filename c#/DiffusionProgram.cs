@@ -1,5 +1,7 @@
 using System;
 
+// Checked for mass consistency by Dr. Pounds on 10/25/19
+
 namespace DiffusionProgram
 {
 	class Program
