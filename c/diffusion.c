@@ -37,12 +37,11 @@ int main (int argc, char** argv)
 
 	do
 	{
-		i = 0; j = 0; k = 0;
-		for (i; i < maxsize; i++)
+		for (i=0; i < maxsize; i++)
 		{
-		for (j; j < maxsize; j++)
+		for (j=0; j < maxsize; j++)
 		{
-			for (k; k < maxsize; k++)
+			for (k=0; k < maxsize; k++)
 			{
 			for (l = 0; l < maxsize; l++)
 			{
@@ -73,12 +72,11 @@ int main (int argc, char** argv)
 
 		double maxval = cube[0];
 		double minval = cube[0];
-		i = 0; j = 0; k = 0;
-		for (i; i < maxsize; i++)
+		for (i=0; i < maxsize; i++)
 		{
-			for (j; j < maxsize; j++)
+			for (j=0; j < maxsize; j++)
 			{
-				for (k; k < maxsize; k++)
+				for (k=0; k < maxsize; k++)
 				{
 					// Determine maxval and minval 
 					if (cube[i*N*N+j*N+k] > maxval)
