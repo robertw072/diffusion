@@ -12,6 +12,9 @@ namespace DiffusionProgram
 		int maxsize = 10;
 		double[, ,] cube = new double [maxsize, maxsize, maxsize];
 
+		// Partition Flag: (0) partition off, (1) partition on
+		int partitionflag = 1; 
+
 		// Zero the cube
 		for (int i = 0; i < maxsize; i++)
 		{
@@ -20,6 +23,35 @@ namespace DiffusionProgram
 				for (int k = 0; k < maxsize; k++)
 				{
 					cube[i, j, k] = 0.0;
+				}
+			}
+		}
+
+		double[, ,] partition = new double [maxsize, maxsize, maxsize];
+		// If partition flag is on, construct the partition
+		if (partitionflag == 1)
+		{
+			// Construct partition array
+			for (int i = 0; i < maxsize; i++)
+                	{
+                        	for (int j = 0; j < maxsize; j++)
+                        	{
+                                	for (int k = 0; k < maxsize; k++)
+                                	{
+                                        	partition[i, j, k] = 0.0; // Zero partition array
+                                	}
+                        	}
+                	}
+		}
+
+		if (partitionflag == 1)
+		{
+			int kp = 5;
+			for (int i = 0; i < maxsize; i++)
+			{
+				for (int j = 0; j < 7; j++)
+				{
+					partition[i, j, kp] = -1; // Spaces where the partition is present
 				}
 			}
 		}
@@ -35,7 +67,7 @@ namespace DiffusionProgram
 		// Initialize first cell
 		cube[0, 0, 0] = 1.0e21;
 
-		int pass = 0;
+		//int pass = 0;
 		double time = 0.0; 									// Tracks accumulated system time
 		double ratio = 0.0;
 
@@ -53,23 +85,30 @@ namespace DiffusionProgram
 					{
 					for(int n=0; n<maxsize; n++)
 					{
-						if ( ((i==l) && (j==m) && (k==n+1)) ||
-						     ((i==l) && (j==m) && (k==n-1)) ||
-						     ((i==l) && (j==m+1) && (k==n)) ||
-						     ((i==l) && (j==m-1) && (k==n)) ||
-						     ((i==l+1) && (j==m) && (k==n)) ||
-						     ((i==l-1) && (j==m) && (k==n)) )
-						{
-							double change = (cube[i, j, k] - cube[l, m, n]) * DTerm;
-							cube[i, j, k] = cube[i, j, k] - change;
-							cube[l, m, n] = cube [l, m, n] + change;
-						}
+						if ( 	((i==l) && (j==m) && (k==n+1)) ||
+						     	((i==l) && (j==m) && (k==n-1)) ||
+						     	((i==l) && (j==m+1) && (k==n)) ||
+						     	((i==l) && (j==m-1) && (k==n)) ||
+						     	((i==l+1) && (j==m) && (k==n)) ||
+						     	((i==l-1) && (j==m) && (k==n)) )
+							{
+							// Check if particles are trying to diffuse into the partition, if not, diffuse!
+							if ((partition[i, j, k] != -1) && (partition[l, m, n] != -1))
+							{						
+								double change = (cube[i, j, k] - cube[l, m, n]) * DTerm;
+								cube[i, j, k] = cube[i, j, k] - change;
+								cube[l, m, n] = cube [l, m, n] + change;
+								//Console.WriteLine(string.Format("{0} ", cube[i, j, k]));
+								//Console.WriteLine(string.Format("{0} ", cube[l, m, n]));
+							}
+							}
 					}
 					}
 				}
 				}
 			}
 			}
+			
 			
 			time = time + timestep;
 
@@ -84,14 +123,15 @@ namespace DiffusionProgram
 					for (int k=0; k<maxsize; k++)
 					{
 						maxval = Math.Max(cube[i, j, k], maxval);
-						minval = Math.Min(cube[i, j, k], minval);
+						if (cube[i, j, k] != 0.0)	// Since the values where the partition is aren't changing, don't consider 0 for min
+							minval = Math.Min(cube[i, j, k], minval);
 						sumval += cube[i, j, k];
 					}
 				}
 			}
 
 			ratio = minval / maxval;
-			Console.WriteLine($"{time} {ratio} {sumval}");
+			Console.WriteLine($"{time} {ratio}");
 		} while (ratio < 0.99);
 
 		Console.WriteLine($"Box equilibrated in: {time} seconds of simulated time.");
