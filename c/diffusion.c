@@ -70,9 +70,17 @@ int main (int argc, char** argv)
 	// Diffusion Process
 	do
 	{
+<<<<<<< HEAD
 		for (i = 0; i < maxsize; i++)
 		{
 			for (j = 0; j < maxsize; j++)
+=======
+		for (i=0; i < maxsize; i++)
+		{
+		for (j=0; j < maxsize; j++)
+		{
+			for (k=0; k < maxsize; k++)
+>>>>>>> 4243c3de23dbb63c27d668d90b4d03da4d1139a4
 			{
 				for (k = 0; k < maxsize; k++)
 				{
@@ -200,7 +208,10 @@ int main (int argc, char** argv)
 
 		double maxval = cube[0];
 		double minval = cube[0];
+<<<<<<< HEAD
 		
+=======
+>>>>>>> 4243c3de23dbb63c27d668d90b4d03da4d1139a4
 		for (i=0; i < maxsize; i++)
 		{
 			for (j=0; j < maxsize; j++)
